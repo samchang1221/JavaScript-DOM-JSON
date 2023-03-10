@@ -1,7 +1,7 @@
 import datas from "./data.json" assert {type: 'json'};
 // console.log(`js ${datas.data}`);
 // datas.data.forEach(element => {
-//     console.log(`js ${element.Ratio}`);
+//     console.log(`js ${element.Company}`);
 // });
 /*
 const marketingShare_old = [
@@ -41,8 +41,46 @@ let companies = [], data = [];
 let container;
 let table, thead, tbody;
 let GlobalCountry2dArray = [];
+const CharData = {
+    labels: companies,
+    datasets: [{
+        data: data,
+        backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(255,75,50)',
+            'rgb(255, 205, 86)',
+            'rgb(75, 192, 192)',
+            'rgb(54, 162, 235)',
+            'rgb(153, 102, 255)',
+            'rgb(201, 203, 207)',
+            'rgb(255, 138, 64)',
+            'rgb(142, 65, 64)',
+            'rgb(59, 72, 64)'
+        ]
+    }],
+}
+
+const CharOptions = {
+    responsive: true,
+    title: {
+        display: true,
+        fontSize: 26,
+        text: '2021年全球晶圓代工市佔率%'
+    },
+    tooltips: {
+        mode: 'point',
+        intersect: true,
+    },
+    legend: {
+        position: 'bottom',
+        labels: {
+            fontColor: 'black',
+        }
+    }
+}
 window.onload = function () {
     drawPieChart(companies, data);
+    drawDoughnutChart(companies, data);
     CreateTable();
 }
 
@@ -62,49 +100,26 @@ function drawPieChart(companyArray, dataArray) {
     let ctxPie = document.getElementById("mkShare");
     var pieChart = new Chart(ctxPie, {
         type: 'pie',
-        data: {
-            labels: companyArray,
-            datasets: [{
-                data: dataArray,
-                backgroundColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(255,75,50)',
-                    'rgb(255, 205, 86)',
-                    'rgb(75, 192, 192)',
-                    'rgb(54, 162, 235)',
-                    'rgb(153, 102, 255)',
-                    'rgb(201, 203, 207)',
-                    'rgb(255, 138, 64)',
-                    'rgb(142, 65, 64)',
-                    'rgb(59, 72, 64)'
-                ]
-            }],
-        },
-        options: {
-            responsive: true,
-            title: {
-                display: true,
-                fontSize: 26,
-                text: '2021年全球晶圓代工市佔率%'
-            },
-            tooltips: {
-                mode: 'point',
-                intersect: true,
-            },
-            legend: {
-                position: 'bottom',
-                labels: {
-                    fontColor: 'black',
-                }
-            }
-        }
+        data: CharData,
+        options: CharOptions,
+    });
+}
+
+//第一個參數為公司陣列, 第二個參數為資料陣列
+function drawDoughnutChart(companyArray, dataArray) {
+    //Pie Chart Doughnut圖
+    let ctxDoughnut = document.getElementById("mkShareDoughnut");
+    var doughnutChart = new Chart(ctxDoughnut, {
+        type: 'doughnut',
+        data: CharData,
+        options: CharOptions,
     });
 }
 
 function CreateTable(){
     // create table
         
-    container = document.getElementById('container');
+    container = document.getElementById('table');
     table = document.createElement('table');
     table.setAttribute("class", "table table-bordered table-striped table-dark");
     thead = document.createElement('thead');
@@ -127,7 +142,7 @@ function CreateTable(){
 }
 
 function CreateThead(titleArray){
-        //(1)
+    //(1)
     let theadTR = document.createElement("tr");
     //(2)建立th,設定資料,th加入tr
     titleArray.forEach((title, index)=>{
